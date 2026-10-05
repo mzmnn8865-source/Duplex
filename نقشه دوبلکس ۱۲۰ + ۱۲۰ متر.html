@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نقشه دوبلکس ۱۲۰ + ۱۲۰ متر</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0f1c;--wall:#e8edf7;--win:#4fd8ff;--door:#46e08a;--dim:#ffd24a;--fur:#8794b3;--txt:#fff;--ar:#4fd8ff;--ui:#131b30;--uit:#dfe6f5;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="paper"]{--bg:#fff;--wall:#111;--win:#0077aa;--door:#0a7a3c;--dim:#a06a00;--fur:#667;--txt:#000;--ar:#005a88;--ui:#eef1f6;--uit:#111}
+@media (prefers-color-scheme:dark){:root:not([data-theme="paper"]){--bg:#0a0f1c}}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--uit);font-family:Vazirmatn,Tahoma,sans-serif}
+body{display:flex;flex-direction:column}
+header{display:flex;gap:6px;flex-wrap:wrap;align-items:center;padding:8px 10px;background:var(--ui)}
+header span{flex:1;font-size:13px;opacity:.75;min-width:120px}
+button{font:inherit;font-size:14px;background:transparent;color:var(--uit);border:1px solid #5a6a92;border-radius:8px;padding:6px 12px}
+button.on{background:var(--win);color:#001;border-color:var(--win)}
+button:focus-visible{outline:2px solid var(--dim);outline-offset:2px}
+.wrap{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+svg{display:block;width:100%;height:auto;margin:0 auto}
+svg.h{display:none}
+.o{fill:var(--bg)}.w{fill:var(--wall)}
+.f{fill:none;stroke:var(--fur);stroke-width:.02}
+.dsh{stroke-dasharray:.12 .08}
+.wn{fill:none;stroke:var(--win);stroke-width:.025}
+.dr{fill:none;stroke:var(--door);stroke-width:.025}
+.dm{fill:none;stroke:var(--dim);stroke-width:.018}
+.tx{fill:var(--txt);font-size:.27px;text-anchor:middle;font-weight:700}
+.tx.s{font-size:.2px}
+.ar{fill:var(--ar);font-size:.2px;text-anchor:middle}
+.ar.s{font-size:.16px}
+.dt{fill:var(--dim);font-size:.2px;text-anchor:middle}
+.bd{fill:none;stroke:var(--wall);stroke-width:.5}
+.t1{fill:var(--txt);font-size:5px;font-weight:700;text-anchor:middle}
+.t2{fill:var(--ar);font-size:3.4px;text-anchor:middle}
+.t3{fill:var(--fur);font-size:2.4px;text-anchor:middle}
+@page{size:A4;margin:10mm}
+@media print{header{display:none}html,body{height:auto}.wrap{overflow:visible}svg,svg.h{display:block!important;width:180mm!important;height:220mm;page-break-after:always}}
+</style>
+</head>
+<body>
+<header>
+<button id="b0" class="on">همکف</button><button id="b1">طبقه اول</button>
+<button id="zm" aria-label="کوچک‌نمایی">−</button><button id="zp" aria-label="بزرگ‌نمایی">+</button>
+<button id="th">روشن / تاریک</button>
+<span>مقیاس ۱:۱۰۰ · برای چاپ دقیق، A4 با اندازهٔ ۱۰۰٪</span>
+</header>
+<div class="wrap" id="wrap"></div>
+<script>
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]).replace('.','٫');
+function sheet(fl){
+ let o='';
+ const rc=(x,y,w,h,c,r)=>{o+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" class="${c}"${r?` rx="${r}"`:''}/>`};
+ const ln=(a,b,c,d,k)=>{o+=`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" class="${k}"/>`};
+ const ci=(x,y,r,k)=>{o+=`<circle cx="${x}" cy="${y}" r="${r}" class="${k}"/>`};
+ const pa=(d,k,m)=>{o+=`<path d="${d}" class="${k}"${m?` marker-end="url(#ah${fl})"`:''}/>`};
+ const tx=(x,y,t,k,r)=>{o+=`<text x="${x}" y="${y}" class="${k}"${r?` transform="rotate(${r} ${x} ${y})"`:''}>${t}</text>`};
+ const fr=(x,y,w,h,r)=>rc(x,y,w,h,'f',r);
+ /* دیوار و بازشو */
+ const W=(x1,y1,x2,y2,t=.15)=>{const H=y1==y2,m=t/2;H?rc(Math.min(x1,x2)-m,y1-m,Math.abs(x2-x1)+t,t,'w'):rc(x1-m,Math.min(y1,y2)-m,t,Math.abs(y2-y1)+t,'w')};
+ const cut=(x,y,L,v)=>v?rc(x-.17,y,.34,L,'o'):rc(x,y-.17,L,.34,'o');
+ const WN=a=>{const[x,y,L,v]=a;cut(x,y,L,v);for(const d of[-.15,0,.15])v?ln(x+d,y,x+d,y+L,'wn'):ln(x,y+d,x+L,y+d,'wn');if(v){ln(x-.15,y,x+.15,y,'wn');ln(x-.15,y+L,x+.15,y+L,'wn')}else{ln(x,y-.15,x,y+.15,'wn');ln(x+L,y-.15,x+L,y+.15,'wn')}};
+ const D=(x,y,L,v,s,h)=>{cut(x,y,L,v);let hx,hy,ex,ey,ax,ay,sw;
+  if(!v){hx=h>0?x:x+L;hy=y;ex=hx;ey=y+s*L;ax=h>0?x+L:x;ay=y;sw=s*h>0?1:0}
+  else{hx=x;hy=h>0?y:y+L;ex=x+s*L;ey=hy;ax=x;ay=h>0?y+L:y;sw=s*h>0?0:1}
+  ln(hx,hy,ex,ey,'dr');pa(`M${ax} ${ay}A${L} ${L} 0 0 ${sw} ${ex} ${ey}`,'dr')};
+ /* سرویس و اثاث */
+ const WC=(x,y)=>{fr(x-.2,y,.4,.2);o+=`<ellipse cx="${x}" cy="${y+.46}" rx=".2" ry=".26" class="f"/>`};
+ const BS=(x,y)=>{fr(x,y,.55,.42,.05);ci(x+.275,y+.21,.12,'f')};
+ const SH=(x,y,s)=>{fr(x,y,s,s);ln(x,y,x+s,y+s,'f');ln(x+s,y,x,y+s,'f');ci(x+s/2,y+s/2,.05,'f')};
+ const TB=(x,y)=>{fr(x,y,1.7,.75,.08);fr(x+.1,y+.08,1.5,.59,.25);ci(x+.25,y+.375,.04,'f')};
+ const BED=(x,y,w,h,hd,n)=>{fr(x,y,w,h,.04);for(let i=0;i<n;i++){
+   if(hd=='n')fr(x+.1+i*w/n,y+.08,w/n-.2,.3,.06);
+   if(hd=='s')fr(x+.1+i*w/n,y+h-.38,w/n-.2,.3,.06);
+   if(hd=='w')fr(x+.08,y+.1+i*h/n,.3,h/n-.2,.06)}
+  hd=='w'?ln(x+w*.4,y,x+w*.4,y+h,'f'):ln(x,hd=='n'?y+h*.4:y+h*.6,x+w,hd=='n'?y+h*.4:y+h*.6,'f')};
+ const AR=r=>{const t=.075;return(r[2]-r[0]-(r[0]<.4?0:t)-(r[2]>9.6?0:t))*(r[3]-r[1]-(r[1]<.4?0:t)-(r[3]>11.6?0:t))};
+ const RM=(n,r,x,y,s)=>{tx(x,y,n,s?'tx s':'tx');tx(x,y+(s?.22:.3),fa(AR(r).toFixed(1))+' م²',s?'ar s':'ar')};
+ const CH=(P,p,v,e)=>{const s=Math.sign(p-e),L=P.length-1;
+  v?ln(p,P[0],p,P[L],'dm'):ln(P[0],p,P[L],p,'dm');
+  P.forEach((q,i)=>{
+   v?ln(e+s*.15,q,p+s*.15,q,'dm'):ln(q,e+s*.15,q,p+s*.15,'dm');
+   v?ln(p-.08,q+.08,p+.08,q-.08,'dm'):ln(q-.08,p+.08,q+.08,p-.08,'dm');
+   if(i){const m=(q+P[i-1])/2,t=fa((q-P[i-1]).toFixed(2));v?tx(p-.1,m,t,'dt',-90):tx(m,p-.1,t,'dt')}})};
+ const ST=()=>{fr(7.3,4,2.4,3.2);fr(7.3,4,2.4,1.1);
+  for(let k=1;k<7;k++){const y=(7.2-k*.3).toFixed(2);ln(7.3,y,8.45,y,'f');ln(8.55,y,9.7,y,'f')}
+  ln(8.5,5.1,8.5,7.2,'f');
+  pa(fl?'M9.12 7V4.55H7.88V6.9':'M7.88 7V4.55H9.12V6.9','dm',1);ci(fl?9.12:7.88,7,.06,'dm');
+  tx(8.5,4.35,fl?'پایین':'بالا','dt')};
+
+ o+=`<svg class="${fl?'h':''}" viewBox="0 0 180 220" role="img" aria-label="${fl?'پلان طبقه اول':'پلان همکف'}" xmlns="http://www.w3.org/2000/svg">
+<defs><marker id="ah${fl}" markerUnits="userSpaceOnUse" markerWidth=".3" markerHeight=".3" viewBox="0 0 6 6" refX="5" refY="3" orient="auto"><path d="M0 0L6 3 0 6z" fill="var(--dim)"/></marker></defs>
+<rect x="4" y="4" width="172" height="212" class="bd"/>
+<text x="90" y="14" class="t1">نقشهٔ معماری دوبلکس — ۱۲۰ + ۱۲۰ مترمربع</text>
+<text x="90" y="21" class="t2">${fl?'پلان طبقه اول · تراز +۳٫۰۰':'پلان طبقه همکف · تراز ±۰٫۰۰'} · مقیاس ۱:۱۰۰</text>
+<g transform="translate(158 62)"><circle r="6" class="dm"/><path d="M0-6L2.2 4 0 2-2.2 4z" fill="var(--dim)"/><text y="-8" class="t3">N</text></g>
+<g transform="translate(40 48) scale(10)">`;
+ o=o.replace('url(#ah)','url(#ah'+fl+')');
+ const P0=o;o='';
+ /* دیوارهای خارجی ۳۰ سانتی */
+ W(.15,.15,9.85,.15,.3);W(.15,11.85,9.85,11.85,.3);W(.15,.15,.15,11.85,.3);W(9.85,.15,9.85,11.85,.3);
+ if(!fl){
+  W(5,.3,5,3);W(7.5,.3,7.5,3);W(5,3,9.7,3);W(.3,3.8,5,3.8);W(6.4,9,6.4,11.7);
+  D(5.6,3,.8,0,-1,1);D(8.1,3,.8,0,-1,1);cut(1.2,3.8,2.7,0);D(7.4,11.85,1.2,0,-1,1);
+  [[1.4,.15,1.8,0],[5.9,.15,.8,0],[7.9,.15,.7,0],[.15,1,1.2,1],[.15,4.6,1.6,1],[.15,8.4,2.2,1],[.9,11.85,2.1,0],[3.6,11.85,2.1,0],[9.85,4.6,1.2,1]].forEach(WN);
+  /* آشپزخانه */
+  fr(.9,.3,4,.6);fr(.3,.3,.6,2.6);fr(.3,2.9,.7,.7);fr(1.85,.45,.35,.3,.05);fr(2.3,.45,.35,.3,.05);
+  fr(3.4,.35,.6,.5);[[3.55,.5],[3.85,.5],[3.55,.72],[3.85,.72]].forEach(a=>ci(a[0],a[1],.08,'f'));
+  fr(1.9,1.9,2,.9);[2.3,2.9,3.5].forEach(x=>ci(x,3.05,.17,'f'));
+  /* انباری و سرویس */
+  fr(5.15,.4,.35,2.4);fr(6.6,.4,.6,.6,.04);ci(6.9,.7,.2,'f');WC(9.1,.4);BS(7.7,.45);
+  /* ناهارخوری */
+  fr(2.4,5.2,2,1,.05);[2.7,3.5].forEach(x=>{fr(x,4.7,.45,.45,.08);fr(x,6.25,.45,.45,.08)});fr(1.9,5.48,.45,.45,.08);fr(4.45,5.48,.45,.45,.08);
+  /* پذیرایی */
+  fr(.45,8.2,.95,2.7,.1);fr(1.4,10,2.3,.9,.1);fr(1.9,8.9,1.2,.7,.05);fr(5.9,9.4,.4,1.6);fr(4.3,8.5,.85,.85,.12);ci(5.5,11.3,.2,'f');
+  /* ورودی */
+  fr(9.25,9,.45,1.6);ci(9.4,11.3,.2,'f');ST();
+  RM('آشپزخانه',[.3,.3,5,3.8],2.95,1.5);RM('انباری',[5,.3,7.5,3],6.25,1.75,1);RM('سرویس مهمان',[7.5,.3,9.7,3],8.6,1.8,1);
+  RM('ناهارخوری',[.3,3.8,7.3,7.2],3.4,4.25);RM('پذیرایی',[.3,7.2,6.4,11.7],3.6,7.8);RM('ورودی',[6.4,7.2,9.7,11.7],8,8.6);
+ }else{
+  W(4.2,.3,4.2,11.7);W(.3,4.8,4.2,4.8);W(.3,8.2,4.2,8.2);W(6.3,.3,6.3,3);W(7.5,.3,7.5,3);W(4.2,3,9.7,3);
+  D(4.2,1,.8,1,1,1);D(4.2,3.3,.9,1,-1,1);D(4.2,5.5,.9,1,-1,1);D(4.2,9,.9,1,-1,1);D(6.5,3,.8,0,-1,1);D(8,3,.8,0,-1,-1);
+  [[2.5,.15,1.2,0],[.15,2,1.6,1],[4.9,.15,.8,0],[6.6,.15,.6,0],[8.3,.15,.8,0],[.15,5.5,1.6,1],[1.4,11.85,2,0],[5,11.85,1.6,0],[7,11.85,1.6,0],[9.85,4.6,1.2,1]].forEach(WN);
+  /* مستر */
+  fr(.3,.3,1.7,.6);BED(.9,2.7,1.8,2,'s',2);fr(.5,4.3,.4,.4);fr(2.7,4.3,.4,.4);
+  SH(5.25,.45,1);BS(4.45,2.35);WC(6.9,.4);fr(6.4,1.45,.38,.5,.05);ci(6.59,1.7,.1,'f');TB(7.75,.45);BS(8.95,2.3);
+  /* خواب ۲ */
+  BED(1.7,4.95,1,2,'n',1);fr(2.7,4.95,.4,.4);fr(.3,5.6,.6,1.4);ci(1.15,6.3,.22,'f');fr(.3,7.6,2.7,.6);
+  /* خواب ۳ */
+  BED(.3,9.6,2,1.5,'w',2);fr(.3,9.2,.4,.4);fr(.3,11.1,.4,.4);fr(.3,8.275,2.4,.55);fr(2.4,11.05,1.2,.6);ci(3,10.8,.2,'f');
+  /* هال و نشیمن */
+  ci(4.6,6.9,.2,'f');ci(4.6,6.9,.1,'f');fr(6.4,8.4,.9,2,.1);fr(7.7,9,.8,.8,.05);fr(9.3,8.5,.4,1.6);ST();
+  /* بالکن */
+  rc(4.5,12,5,1.2,'f dsh');ci(8.2,12.6,.17,'f');ci(9.2,12.6,.17,'f');ci(8.7,12.6,.3,'f');ci(4.8,12.9,.2,'f');tx(6.3,12.7,'بالکن','ar');
+  RM('اتاق خواب مستر',[.3,.3,4.2,4.8],2.2,1.5);RM('حمام مستر',[4.2,.3,6.3,3],5.55,1.9,1);RM('دستشویی',[6.3,.3,7.5,3],6.9,1.85,1);RM('حمام ۲',[7.5,.3,9.7,3],8.5,1.85,1);
+  RM('اتاق خواب ۲',[.3,4.8,4.2,8.2],2.2,7.3);RM('اتاق خواب ۳',[.3,8.2,4.2,11.7],2.4,9.2);
+  RM('هال',[4.2,3,7.3,7.2],5.8,5.5);RM('نشیمن خانوادگی',[4.2,7.2,9.7,11.7],5.5,8);
+ }
+ CH(fl?[0,4.2,6.3,7.5,10]:[0,5,7.5,10],-1,0,0);CH([0,10],-2,0,0);
+ CH(fl?[0,3,4.8,8.2,12]:[0,3,3.8,7.2,12],11,1,10);CH([0,12],-1.2,1,0);CH([0,10],13.9,0,12);
+ for(let i=0;i<5;i++){rc(i,15,1,.2,i%2?'w':'f');tx(i,15.65,fa(i),'ar s')}tx(5,15.65,'۵ متر','ar s');
+ return P0+o+`</g><text x="90" y="212" class="t3">ابعاد به متر · دیوار خارجی ۳۰ و داخلی ۱۵ سانتی‌متر · طرح مفهومی، نیازمند تأیید مهندس ناظر</text></svg>`;
+}
+const $=id=>document.getElementById(id),wrap=$('wrap');
+wrap.innerHTML=sheet(0)+sheet(1);
+const sv=[...wrap.querySelectorAll('svg')];let cur=0,z=innerWidth<700?2.4:1;
+function show(){sv.forEach((s,i)=>{s.classList.toggle('h',i!=cur);s.style.width=z*100+'%'});$('b0').classList.toggle('on',!cur);$('b1').classList.toggle('on',!!cur)}
+$('b0').onclick=()=>{cur=0;show()};$('b1').onclick=()=>{cur=1;show()};
+$('zp').onclick=()=>{z=Math.min(5,z*1.3);show()};$('zm').onclick=()=>{z=Math.max(1,z/1.3);show()};
+const R=document.documentElement;
+$('th').onclick=()=>{R.dataset.theme=R.dataset.theme=='paper'?'dark':'paper'};
+let prev;addEventListener('beforeprint',()=>{prev=R.dataset.theme;R.dataset.theme='paper'});addEventListener('afterprint',()=>{R.dataset.theme=prev||'dark'});
+show();
+</script>
+</body>
+</html>
